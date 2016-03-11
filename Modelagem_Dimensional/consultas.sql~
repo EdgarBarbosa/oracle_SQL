@@ -1,0 +1,25 @@
+--CONSULTAS:
+/*Os gerentes da empresa distribuidora de filmes desejam saber os gêneros dos filmes mais assistidos no país.*/
+SELECT TGENEROS.NOME_GEN,SUM(PUBLICO) FROM TSESSOES,TGENEROS WHERE TSESSOES.ID_GEN=TGENEROS.ID_GEN GROUP BY TGENEROS.NOME_GEN ORDER BY(2) DESC;
+
+Os executivos querem saber os nomes dos filmes mais assistidos no estado de São Paulo.
+SELECT TFILMES.TIT_PORT,SUM(PUBLICO) FROM TSESSOES,TFILMES,TCINEMA WHERE TSESSOES.ID_FILME=TFILMES.ID_FILME 
+AND TSESSOES.ID_CIN=TCINEMA.ID_CIN AND TCINEMA.ESTADO='Sao Paulo' 
+GROUP BY TFILMES.TIT_PORT ORDER BY(2) DESC;
+
+Quais são os diretores que conseguiram a maior quantidade de público no País.
+SELECT TPESSOAS.NOME_PES, SUM(TSESSOES.PUBLICO)"PUBLICO" FROM TSESSOES,TPESSOAS WHERE TSESSOES.ID_PES=TPESSOAS.ID_PES GROUP BY TPESSOAS.NOME_PES ORDER BY "PUBLICO" DESC;
+Quais são as cidades que tiveram o maior publico na(s) sua(s) sala(s) de cinema.
+SELECT TCINEMA.CIDADE FROM TSESSOES,TCINEMA WHERE TSESSOES.ID_CIN IN (SELECT TMP.ID_CIN FROM (SELECT ID_CIN,MAX(ARRECADACAO) TOTAL FROM TSESSOES GROUP BY ID_CIN )TMP);
+
+Quais são os cinemas que tiveram a maior arrecadação.
+
+SELECT TCINEMA.NOME_CIN FROM TSESSOES,TCINEMA WHERE TSESSOES.ID_CIN IN (SELECT TMP.ID_CIN FROM (SELECT ID_CIN,MAX(ARRECADACAO) TOTAL FROM TSESSOES GROUP BY ID_CIN )TMP);
+Em qual mês houve o maior publico no estado do Rio de Janeiro.
+SE
+select distinct tdatas.mes from tdatas where ID_DATA in (select tmp.id_data from (select   tsessoes.ID_DATA,max(tsessoes.PUBLICO) from tsessoes,tcinema where tsessoes.ID_CIN=tcinema.ID_CIN and tcinema.estado='Rio de Janeiro' group by tsessoes.ID_DATA)tmp);
+
+ No meses de fevereiro e março quais foram os estados que arrecadaram mais dinheiro.
+SELECT DISTINCT TCINEMA.ESTADO FROM TDATAS,TCINEMA WHERE ID_DATA IN (SELECT TMP.ID_DATA FROM
+(select tdatas.ID_DATA,MAX(tsessoes.ARRECADACAO) from tsessoes,tdatas,TCINEMA 
+where TCINEMA.ID_CIN=tsessoes.ID_CIN AND tsessoes.ID_DATA=tdatas.ID_DATA and tdatas.MES IN ('FEVEREIRO','MARÇO') GROUP BY tdatas.ID_DATA)TMP);

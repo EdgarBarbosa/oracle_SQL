@@ -1,0 +1,77 @@
+CREATE TABLE sessoes (
+datas varchar(26 BYTE),
+publico int,
+horario varchar(5),
+id_ses int PRIMARY KEY,
+arrecadacao decimal(7,2),
+id_cin int,
+id_filme int
+);
+
+CREATE TABLE generos (
+id_gen int PRIMARY KEY,
+nome_gen varchar(20)
+);
+
+CREATE TABLE filmes (
+tit_port varchar(55),
+duracao int,
+id_filme int PRIMARY KEY,
+tit_orig varchar(55),
+id_pes int,
+id_gen int,
+id_pais int,
+FOREIGN KEY(id_gen) REFERENCES generos (id_gen)
+);
+
+CREATE TABLE estado (
+nomem_est varchar(25),
+id_est int PRIMARY KEY,
+id_reg int
+);
+
+CREATE TABLE regiao (
+nome_reg varchar(15),
+id_reg int PRIMARY KEY
+);
+
+CREATE TABLE cidade (
+nome_cid varchar(20),
+id_cid int PRIMARY KEY,
+id_est int,
+FOREIGN KEY(id_est) REFERENCES estado (id_est)
+);
+
+CREATE TABLE cinemas (
+capacidade int,
+id_cin int PRIMARY KEY,
+nome_cin varchar(20),
+Ender varchar(50),
+id_cid int,
+FOREIGN KEY(id_cid) REFERENCES cidade (id_cid)
+);
+
+CREATE TABLE pais (
+nome_pais varchar(20),
+id_pais int PRIMARY KEY
+);
+
+CREATE TABLE pessoas (
+id_pes int PRIMARY KEY,
+nome_pes varchar(50),
+id_pais int,
+FOREIGN KEY(id_pais) REFERENCES pais (id_pais)
+);
+
+CREATE TABLE atuar (
+id_filme int,
+id_pes int,
+FOREIGN KEY(id_filme) REFERENCES filmes (id_filme),
+FOREIGN KEY(id_pes) REFERENCES pessoas (id_pes)
+);
+
+ALTER TABLE sessoes ADD FOREIGN KEY(id_cin) REFERENCES cinemas (id_cin);
+ALTER TABLE sessoes ADD FOREIGN KEY(id_filme) REFERENCES filmes (id_filme);
+ALTER TABLE filmes ADD FOREIGN KEY(id_pes) REFERENCES pessoas (id_pes);
+ALTER TABLE filmes ADD FOREIGN KEY(id_pais) REFERENCES pais (id_pais);
+ALTER TABLE estado ADD FOREIGN KEY(id_reg) REFERENCES regiao (id_reg);
